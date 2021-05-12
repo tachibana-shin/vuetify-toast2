@@ -179,10 +179,12 @@ const VueToastGroup = {
     }
 
     if ("action" in props) {
+      var _props$action, _props$action2, _props$action3;
+
       toastProp.action = {
-        icon: props.action.icon || undefined,
-        text: props.action.text || undefined,
-        onClick: props.action.onClick || undefined
+        icon: ((_props$action = props.action) === null || _props$action === void 0 ? void 0 : _props$action.icon) || undefined,
+        text: ((_props$action2 = props.action) === null || _props$action2 === void 0 ? void 0 : _props$action2.text) || undefined,
+        onClick: ((_props$action3 = props.action) === null || _props$action3 === void 0 ? void 0 : _props$action3.onClick) || undefined
       };
     }
 
@@ -194,7 +196,7 @@ const VueToastGroup = {
   },
 
   render(h) {
-    return h("div", toArray(this.$toasts[this.name] || []).map(function (item) {
+    return h("div", toArray(this.$toasts[this.name] || []).map(item => {
       return h("v-snackbar", {
         scopedSlots: {
           default: () => h("div", [...(item.prepend ? [h("v-icon", item.prepend)] : []), !!item.$html ? h("span", {

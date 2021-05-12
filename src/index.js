@@ -184,9 +184,9 @@ const VueToastGroup = {
 
     if ("action" in props) {
       toastProp.action = {
-        icon: props.action.icon || undefined,
-        text: props.action.text || undefined,
-        onClick: props.action.onClick || undefined,
+        icon: props.action?.icon || undefined,
+        text: props.action?.text || undefined,
+        onClick: props.action?.onClick || undefined,
       };
     }
 
@@ -198,7 +198,7 @@ const VueToastGroup = {
   render(h) {
     return h(
       "div",
-      toArray(this.$toasts[this.name] || []).map(function (item) {
+      toArray(this.$toasts[this.name] || []).map((item) => {
         return h("v-snackbar", {
           scopedSlots: {
             default: () =>

@@ -278,10 +278,12 @@ var VueToastGroup = {
     }
 
     if ("action" in props) {
+      var _props$action, _props$action2, _props$action3;
+
       toastProp.action = {
-        icon: props.action.icon || undefined,
-        text: props.action.text || undefined,
-        onClick: props.action.onClick || undefined
+        icon: ((_props$action = props.action) === null || _props$action === void 0 ? void 0 : _props$action.icon) || undefined,
+        text: ((_props$action2 = props.action) === null || _props$action2 === void 0 ? void 0 : _props$action2.text) || undefined,
+        onClick: ((_props$action3 = props.action) === null || _props$action3 === void 0 ? void 0 : _props$action3.onClick) || undefined
       };
     }
 
@@ -291,6 +293,8 @@ var VueToastGroup = {
     this.$delete(this, this.name);
   },
   render: function render(h) {
+    var _this = this;
+
     return h("div", toArray(this.$toasts[this.name] || []).map(function (item) {
       return h("v-snackbar", {
         scopedSlots: {
@@ -310,7 +314,7 @@ var VueToastGroup = {
             }, [item.action.icon ? h("v-icon", item.action.icon) : item.action.text]) : undefined;
           }
         },
-        props: _objectSpread(_objectSpread({}, mergeProps(this, item)), {}, {
+        props: _objectSpread(_objectSpread({}, mergeProps(_this, item)), {}, {
           value: item.value
         }),
         on: {
