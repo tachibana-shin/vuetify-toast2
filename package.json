@@ -1,6 +1,6 @@
 {
   "name": "vuetify-toast2",
-  "version": "0.0.1-b5",
+  "version": "0.0.1-b6",
   "main": "vuetify-toast2.js",
   "module": "vuetify-toast2.node.esm.js",
   "unpkg": "vuetify-toast2.esm.js",
