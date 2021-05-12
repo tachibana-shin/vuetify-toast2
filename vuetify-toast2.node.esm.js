@@ -6,77 +6,6 @@ function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
-var arrayLikeToArray = createCommonjsModule(function (module) {
-  function _arrayLikeToArray(arr, len) {
-    if (len == null || len > arr.length) len = arr.length;
-
-    for (var i = 0, arr2 = new Array(len); i < len; i++) {
-      arr2[i] = arr[i];
-    }
-
-    return arr2;
-  }
-
-  module.exports = _arrayLikeToArray;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(arrayLikeToArray);
-
-var arrayWithoutHoles = createCommonjsModule(function (module) {
-  function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) return arrayLikeToArray(arr);
-  }
-
-  module.exports = _arrayWithoutHoles;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(arrayWithoutHoles);
-
-var iterableToArray = createCommonjsModule(function (module) {
-  function _iterableToArray(iter) {
-    if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-  }
-
-  module.exports = _iterableToArray;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(iterableToArray);
-
-var unsupportedIterableToArray = createCommonjsModule(function (module) {
-  function _unsupportedIterableToArray(o, minLen) {
-    if (!o) return;
-    if (typeof o === "string") return arrayLikeToArray(o, minLen);
-    var n = Object.prototype.toString.call(o).slice(8, -1);
-    if (n === "Object" && o.constructor) n = o.constructor.name;
-    if (n === "Map" || n === "Set") return Array.from(o);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
-  }
-
-  module.exports = _unsupportedIterableToArray;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(unsupportedIterableToArray);
-
-var nonIterableSpread = createCommonjsModule(function (module) {
-  function _nonIterableSpread() {
-    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-
-  module.exports = _nonIterableSpread;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(nonIterableSpread);
-
-var toConsumableArray = createCommonjsModule(function (module) {
-  function _toConsumableArray(arr) {
-    return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
-  }
-
-  module.exports = _toConsumableArray;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-var _toConsumableArray = unwrapExports(toConsumableArray);
-
 var defineProperty = createCommonjsModule(function (module) {
   function _defineProperty(obj, key, value) {
     if (key in obj) {
@@ -298,11 +227,11 @@ function index (Vue) {
       }
 
       if (group in toasts) {
-        toasts[group] = Object.assign.apply(Object, [{}, toasts[group], prop].concat(_toConsumableArray(color ? {
+        toasts[group] = _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, toasts[group]), prop), color ? {
           color: color
-        } : {}), [{
+        } : {}), {}, {
           value: true
-        }]));
+        });
       }
     },
     success: function success(group, prop) {

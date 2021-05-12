@@ -207,15 +207,12 @@ export default function (Vue) {
       }
 
       if (group in toasts) {
-        toasts[group] = Object.assign(
-          {},
-          toasts[group],
-          prop,
+        toasts[group] = {
+          ...toasts[group],
+          ...prop,
           ...(color ? { color } : {}),
-          {
-            value: true,
-          }
-        );
+          value: true,
+        };
       }
     },
     success: (group, prop) => {

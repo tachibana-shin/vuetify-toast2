@@ -202,11 +202,13 @@ function index (Vue) {
       }
 
       if (group in toasts) {
-        toasts[group] = Object.assign({}, toasts[group], prop, ...(color ? {
-          color
-        } : {}), {
+        toasts[group] = { ...toasts[group],
+          ...prop,
+          ...(color ? {
+            color
+          } : {}),
           value: true
-        });
+        };
       }
     },
     success: (group, prop) => {
