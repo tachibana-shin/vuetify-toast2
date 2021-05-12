@@ -234,7 +234,7 @@ const VueToastGroup = {
                 : undefined,
           },
           props: {
-            ...mergeProps(_this, item),
+            ...mergeProps(this, item),
             value: item.value,
           },
           on: {

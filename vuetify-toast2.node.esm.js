@@ -310,7 +310,7 @@ var VueToastGroup = {
             }, [item.action.icon ? h("v-icon", item.action.icon) : item.action.text]) : undefined;
           }
         },
-        props: _objectSpread(_objectSpread({}, mergeProps(_this, item)), {}, {
+        props: _objectSpread(_objectSpread({}, mergeProps(this, item)), {}, {
           value: item.value
         }),
         on: {

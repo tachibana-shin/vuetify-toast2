@@ -211,7 +211,7 @@ const VueToastGroup = {
             }
           }, [item.action.icon ? h("v-icon", item.action.icon) : item.action.text]) : undefined
         },
-        props: { ...mergeProps(_this, item),
+        props: { ...mergeProps(this, item),
           value: item.value
         },
         on: {
