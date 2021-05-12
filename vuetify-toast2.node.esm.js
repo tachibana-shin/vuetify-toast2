@@ -6,6 +6,77 @@ function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
+var arrayLikeToArray = createCommonjsModule(function (module) {
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+
+    for (var i = 0, arr2 = new Array(len); i < len; i++) {
+      arr2[i] = arr[i];
+    }
+
+    return arr2;
+  }
+
+  module.exports = _arrayLikeToArray;
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
+});
+unwrapExports(arrayLikeToArray);
+
+var arrayWithoutHoles = createCommonjsModule(function (module) {
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) return arrayLikeToArray(arr);
+  }
+
+  module.exports = _arrayWithoutHoles;
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
+});
+unwrapExports(arrayWithoutHoles);
+
+var iterableToArray = createCommonjsModule(function (module) {
+  function _iterableToArray(iter) {
+    if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+  }
+
+  module.exports = _iterableToArray;
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
+});
+unwrapExports(iterableToArray);
+
+var unsupportedIterableToArray = createCommonjsModule(function (module) {
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+  }
+
+  module.exports = _unsupportedIterableToArray;
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
+});
+unwrapExports(unsupportedIterableToArray);
+
+var nonIterableSpread = createCommonjsModule(function (module) {
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+
+  module.exports = _nonIterableSpread;
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
+});
+unwrapExports(nonIterableSpread);
+
+var toConsumableArray = createCommonjsModule(function (module) {
+  function _toConsumableArray(arr) {
+    return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
+  }
+
+  module.exports = _toConsumableArray;
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
+});
+var _toConsumableArray = unwrapExports(toConsumableArray);
+
 var defineProperty = createCommonjsModule(function (module) {
   function _defineProperty(obj, key, value) {
     if (key in obj) {
@@ -173,7 +244,16 @@ function mergeProps(a, b) {
 }
 
 var VueToastGroup = {
-  props: props,
+  props: _objectSpread(_objectSpread({}, props), {}, {
+    prepend: {
+      type: [String, undefined],
+      "default": undefined
+    },
+    append: {
+      type: [String, undefined],
+      "default": undefined
+    }
+  }),
   created: function created() {
     var name = this.name;
     var toastProp = {
@@ -182,8 +262,27 @@ var VueToastGroup = {
       $html: undefined
     };
 
+    var props = _objectSpread(_objectSpread({}, props), {}, {
+      prepend: {
+        type: [String, undefined],
+        "default": undefined
+      },
+      append: {
+        type: [String, undefined],
+        "default": undefined
+      }
+    });
+
     for (var _name in props) {
       toastProp[_name] = props[_name]["default"];
+    }
+
+    if ("action" in props[name]) {
+      toastProp.action = {
+        icon: props[name].icon || undefined,
+        text: props[name].text || undefined,
+        onClick: props[name].onClick || undefined
+      };
     }
 
     this.$set(this.$toasts, name, toastProp);
@@ -192,11 +291,25 @@ var VueToastGroup = {
     this.$delete(this, this.name);
   },
   render: function render(h) {
-    var _this = this;
-
     return h("div", toArray(this.$toasts[this.name] || []).map(function (item) {
       return h("v-snackbar", {
-        domProps: _defineProperty({}, !!item.$html ? "innerHTML" : "innerText", !!item.$html ? item.$html : item.$text),
+        scopedSlots: {
+          "default": function _default() {
+            return h("div", [].concat(_toConsumableArray(item.prepend ? [h("v-icon", item.prepend)] : []), [!!item.$html ? h("span", {
+              domProps: {
+                innerHTML: item.$html
+              }
+            }) : item.$text], _toConsumableArray(item.append ? [h("v-icon", item.append)] : [])));
+          },
+          action: function action() {
+            return item.action ? h("v-btn", {
+              props: _defineProperty({}, item.action.icon ? "icon" : "text", true),
+              on: {
+                click: item.action.onClick || function () {}
+              }
+            }, [item.action.icon ? h("v-icon", item.action.icon) : item.action.text]) : undefined;
+          }
+        },
         props: _objectSpread(_objectSpread({}, mergeProps(_this, item)), {}, {
           value: item.value
         }),
@@ -214,7 +327,7 @@ function index (Vue) {
   var _arguments = arguments;
   var toasts = {};
   var toast = {
-    show: function show(group, prop, color) {
+    show: function show(group, prop, color, prepend) {
       if (_arguments.length === 1) {
         prop = group;
         group = "default";
@@ -227,24 +340,26 @@ function index (Vue) {
       }
 
       if (group in toasts) {
-        toasts[group] = _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, toasts[group]), prop), color ? {
+        toasts[group] = _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, toasts[group]), prop), color ? {
           color: color
-        } : {}), {}, {
+        } : {}), props(prepend ? {
+          prepend: prepend
+        } : {})), {}, {
           value: true
         });
       }
     },
     success: function success(group, prop) {
-      toast.show(group, prop, "success");
+      toast.show(group, prop, "success", "mdi-check-circle");
     },
     info: function info(group, prop) {
-      toast.show(group, prop, "info");
+      toast.show(group, prop, "info", "mdi-alert-circle-outline");
     },
     warn: function warn(group, prop) {
-      toast.show(group, prop, "warning");
+      toast.show(group, prop, "warning", "mdi-alert-outline");
     },
     error: function error(group, prop) {
-      toast.show(group, prop, "error");
+      toast.show(group, prop, "error", "mdi-alert-octagon-outline");
     }
   };
   Object.defineProperty(Vue.prototype, "_toasts", {

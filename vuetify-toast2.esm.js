@@ -143,7 +143,16 @@ function mergeProps(a, b) {
 }
 
 const VueToastGroup = {
-  props,
+  props: { ...props,
+    prepend: {
+      type: [String, undefined],
+      default: undefined
+    },
+    append: {
+      type: [String, undefined],
+      default: undefined
+    }
+  },
 
   created() {
     const {
@@ -154,9 +163,27 @@ const VueToastGroup = {
       $text: undefined,
       $html: undefined
     };
+    const props = { ...props,
+      prepend: {
+        type: [String, undefined],
+        default: undefined
+      },
+      append: {
+        type: [String, undefined],
+        default: undefined
+      }
+    };
 
     for (const name in props) {
       toastProp[name] = props[name].default;
+    }
+
+    if ("action" in props[name]) {
+      toastProp.action = {
+        icon: props[name].icon || undefined,
+        text: props[name].text || undefined,
+        onClick: props[name].onClick || undefined
+      };
     }
 
     this.$set(this.$toasts, name, toastProp);
@@ -167,18 +194,31 @@ const VueToastGroup = {
   },
 
   render(h) {
-    return h("div", toArray(this.$toasts[this.name] || []).map(item => {
+    return h("div", toArray(this.$toasts[this.name] || []).map(function (item) {
       return h("v-snackbar", {
-        domProps: {
-          [!!item.$html ? "innerHTML" : "innerText"]: !!item.$html ? item.$html : item.$text
+        scopedSlots: {
+          default: () => h("div", [...(item.prepend ? [h("v-icon", item.prepend)] : []), !!item.$html ? h("span", {
+            domProps: {
+              innerHTML: item.$html
+            }
+          }) : item.$text, ...(item.append ? [h("v-icon", item.append)] : [])]),
+          action: () => item.action ? h("v-btn", {
+            props: {
+              [item.action.icon ? "icon" : "text"]: true
+            },
+            on: {
+              click: item.action.onClick || (() => {})
+            }
+          }, [item.action.icon ? h("v-icon", item.action.icon) : item.action.text]) : undefined
         },
-        props: { ...mergeProps(this, item),
+        props: { ...mergeProps(_this, item),
           value: item.value
         },
         on: {
-          input: $event => {
+          input($event) {
             item.value = $event;
           }
+
         }
       });
     }) /////
@@ -189,7 +229,7 @@ const VueToastGroup = {
 function index (Vue) {
   const toasts = {};
   const toast = {
-    show: (group, prop, color) => {
+    show: (group, prop, color, prepend) => {
       if (arguments.length === 1) {
         prop = group;
         group = "default";
@@ -207,21 +247,24 @@ function index (Vue) {
           ...(color ? {
             color
           } : {}),
+          ...props(prepend ? {
+            prepend
+          } : {}),
           value: true
         };
       }
     },
     success: (group, prop) => {
-      toast.show(group, prop, "success");
+      toast.show(group, prop, "success", "mdi-check-circle");
     },
     info: (group, prop) => {
-      toast.show(group, prop, "info");
+      toast.show(group, prop, "info", "mdi-alert-circle-outline");
     },
     warn: (group, prop) => {
-      toast.show(group, prop, "warning");
+      toast.show(group, prop, "warning", "mdi-alert-outline");
     },
     error: (group, prop) => {
-      toast.show(group, prop, "error");
+      toast.show(group, prop, "error", "mdi-alert-octagon-outline");
     }
   };
   Object.defineProperty(Vue.prototype, "_toasts", {
