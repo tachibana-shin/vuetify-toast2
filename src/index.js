@@ -193,7 +193,7 @@ const VueToastGroup = {
     this.$set(this.$toasts, name, toastProp);
   },
   beforeDestroy() {
-    this.$delete(this, this.name);
+    this.$set(this, this.name, null);
   },
   render(h) {
     return h(
